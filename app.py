@@ -1,5 +1,6 @@
 import streamlit as st
 import json
+import matplotlib.pyplot as plt
 
 from parser import (
     extract_text_from_pdf,
@@ -18,47 +19,97 @@ from matcher import (
 from report_generator import save_report
 
 
-st.set_page_config(page_title="Resume Analyzer")
+# Page Configuration
+st.set_page_config(
+    page_title="Intelligent Resume Analyzer",
+    page_icon="📄",
+    layout="wide"
+)
 
+# Sidebar
+st.sidebar.title("📄 Resume Analyzer")
+st.sidebar.info(
+    """
+    AI-Powered Resume Screening System
+
+    Features:
+    - Resume Parsing
+    - ATS Score
+    - Skill Matching
+    - Hiring Recommendation
+    - JSON Report Export
+    """
+)
+
+# Main Title
 st.title("📄 Intelligent Resume Analyzer")
+st.write(
+    "Upload a resume and compare it against job requirements."
+)
 
+# Resume Upload
 uploaded_file = st.file_uploader(
-    "Upload Resume",
+    "Upload Resume (PDF)",
     type=["pdf"]
 )
 
+# Required Skills Input
 job_skills_input = st.text_area(
-    "Enter Required Skills (comma separated)"
+    "Enter Required Skills (comma separated)",
+    placeholder="Python, SQL, Machine Learning, Git, Pandas"
 )
 
+# Analyze Button
 if uploaded_file and st.button("Analyze Resume"):
 
     text = extract_text_from_pdf(uploaded_file)
 
+    # Extract Details
     name = extract_name(text)
     email = extract_email(text)
     skills = extract_skills(text)
     experience = extract_experience(text)
 
+    # Process Required Skills
     required_skills = [
         skill.strip()
         for skill in job_skills_input.split(",")
         if skill.strip()
     ]
 
+    if not required_skills:
+        st.error("Please enter required skills.")
+        st.stop()
+
+    # Match Analysis
     score, matched, missing = calculate_match_score(
         skills,
         required_skills
     )
 
-    result = recommendation(score) 
+    result = recommendation(score)
+
+    # Dashboard Metrics
+    st.subheader("📊 Dashboard")
 
     col1, col2, col3 = st.columns(3)
 
-    col1.metric("Match Score", f"{score}%")
-    col2.metric("Skills Found", len(skills))
-    col3.metric("Missing Skills", len(missing))
+    col1.metric(
+        "Match Score",
+        f"{score}%"
+    )
 
+    col2.metric(
+        "Skills Found",
+        len(skills)
+    )
+
+    col3.metric(
+        "Missing Skills",
+        len(missing)
+    )
+
+    # Report Data
     report = {
         "candidate_name": name,
         "email": email,
@@ -75,25 +126,131 @@ if uploaded_file and st.button("Analyze Resume"):
         "reports/report.json"
     )
 
+    # Download Button
+    json_report = json.dumps(
+        report,
+        indent=4
+    )
+
+    st.download_button(
+        label="📥 Download JSON Report",
+        data=json_report,
+        file_name="resume_report.json",
+        mime="application/json"
+    )
+
+    # Analysis Complete
     st.success("Analysis Complete")
 
-    st.subheader("Candidate Details")
+    # Candidate Details
+    st.subheader("👤 Candidate Details")
 
     st.write(f"**Name:** {name}")
     st.write(f"**Email:** {email}")
-    st.write(f"**Skills:** {', '.join(skills)}")
-    st.write(f"**Experience:** {experience} years")
 
-    st.subheader("Match Analysis")
+    st.write(
+        f"**Skills:** {', '.join(skills)}"
+    )
 
-    st.subheader("ATS Match Score")
+    st.write(
+        f"**Experience:** {experience} years"
+    )
+
+    # ATS Score
+    st.subheader("🎯 ATS Match Score")
 
     st.progress(score / 100)
 
-    st.metric("Score", f"{score}%")
-    
-    st.write(f"**Matched Skills:** {matched}")
-    st.write(f"**Missing Skills:** {missing}")
+    st.metric(
+        "ATS Score",
+        f"{score}%"
+    )
+
+    # Match Analysis
+    st.subheader("📋 Match Analysis")
+
+    st.write(
+        f"**Matched Skills:** {matched}"
+    )
+
+    st.write(
+        f"**Missing Skills:** {missing}"
+    )
+
+    # Recommendation
+    st.subheader("🏆 Recommendation")
 
     st.success(result)
-    st.info(hiring_insight(score)) 
+
+    # Hiring Insight
+    st.info(
+        hiring_insight(score)
+    )
+
+    # Resume Strengths
+    st.subheader("💪 Resume Strengths")
+
+    strengths = []
+
+    if "Python" in skills:
+        strengths.append(
+            "Strong Python Programming"
+        )
+
+    if "SQL" in skills:
+        strengths.append(
+            "Database Knowledge"
+        )
+
+    if "Git" in skills:
+        strengths.append(
+            "Version Control Experience"
+        )
+
+    if "Data Analysis" in skills:
+        strengths.append(
+            "Data Analytics Skills"
+        )
+
+    if strengths:
+
+        for item in strengths:
+            st.success(f"✓ {item}")
+
+    else:
+        st.warning(
+            "No major strengths detected."
+        )
+
+    # Skill Gaps
+    st.subheader("⚠️ Skill Gap Analysis")
+
+    if missing:
+
+        for skill in missing:
+            st.warning(
+                f"✗ {skill}"
+            )
+
+    else:
+        st.success(
+            "No Skill Gaps Found"
+        )
+
+    # Visualization
+    st.subheader(
+        "📈 Skill Match Visualization"
+    )
+
+    fig, ax = plt.subplots()
+
+    ax.pie(
+        [len(matched), len(missing)],
+        labels=[
+            "Matched Skills",
+            "Missing Skills"
+        ],
+        autopct="%1.1f%%"
+    )
+
+    st.pyplot(fig)

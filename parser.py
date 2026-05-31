@@ -29,8 +29,9 @@ def extract_text_from_pdf(pdf_file):
 
     for page in reader.pages:
         page_text = page.extract_text()
+
         if page_text:
-            text += page_text
+            text += page_text + "\n"
 
     return text
 
@@ -45,36 +46,51 @@ def extract_email(text):
         return emails[0]
 
     return "Not Found"
-   
-    
 
 
 def extract_name(text):
+
     lines = text.split("\n")
 
-    for line in lines[:5]:
-        if len(line.split()) <= 4:
-            return line.strip()
+    clean_lines = [
+        line.strip()
+        for line in lines
+        if line.strip()
+    ]
 
-    return "Unknown"
+    if len(clean_lines) >= 2:
+        first_name = clean_lines[0]
+        second_name = clean_lines[1]
+
+        if len(first_name.split()) <= 3:
+            return first_name + " " + second_name
+
+    return clean_lines[0]
 
 
 def extract_skills(text):
+
     found_skills = []
 
     for skill in SKILLS_DB:
+
         if skill.lower() in text.lower():
+
             found_skills.append(skill)
 
-    return found_skills
+    return list(set(found_skills))
 
 
 def extract_experience(text):
-    pattern = r'(\d+)\+?\s*years'
 
-    match = re.search(pattern, text.lower())
+    years = re.findall(r'20\d{2}', text)
 
-    if match:
-        return int(match.group(1))
+    if len(years) >= 2:
+
+        oldest_year = min(map(int, years))
+
+        current_year = 2025
+
+        return current_year - oldest_year
 
     return 0
