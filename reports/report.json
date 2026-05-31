@@ -1,0 +1,25 @@
+{
+    "candidate_name": "Krishna SaiVarmaKalidindi",
+    "email": "Envelopevarmatowork8642@gmail.com",
+    "skills": [
+        "Python",
+        "SQL",
+        "Data Analysis",
+        "Pandas",
+        "NumPy",
+        "Git",
+        "CSS"
+    ],
+    "experience_years": 0,
+    "match_score": 80,
+    "matched_skills": [
+        "Python",
+        "SQL",
+        "Git",
+        "Pandas"
+    ],
+    "missing_skills": [
+        "Machine Learning"
+    ],
+    "recommendation": "Highly Recommended"
+}
