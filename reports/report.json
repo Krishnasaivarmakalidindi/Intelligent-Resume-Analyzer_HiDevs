@@ -1,42 +1,38 @@
 {
-    "candidate_name": "Krishna SaiVarmaKalidindi Junior Data Analyst | B.Tech CSE StudentHyderabad, India",
-    "email": "Envelopevarmatowork8642@gmail.com",
+    "candidate_name": "KALIDINDI KRISHNA SAI VARMA",
+    "email": "varmatowork8642@gmail.com",
     "skills": [
-        "SQL",
-        "CSS",
-        "Flutter",
+        "Java",
         "React",
-        "EDA",
-        "Python",
-        "Data Cleaning",
-        "Supabase",
-        "LLM",
-        "PostgreSQL",
-        "Pandas",
-        "Git",
-        "REST API",
-        "OpenAI",
-        "AI",
-        "Data Analysis",
-        "Prompt Engineering",
         "MySQL",
-        "Scikit-learn",
+        "Supabase",
+        "HTML",
+        "C++",
+        "JavaScript",
         "ML",
+        "SQL",
+        "AI",
+        "CSS",
         "GitHub",
+        "Git",
+        "Flutter",
         "Firebase",
+        "OpenAI",
+        "Python",
         "MongoDB",
-        "NumPy"
+        "REST API",
+        "PostgreSQL"
     ],
-    "experience_years": 2,
-    "match_score": 80,
+    "experience_years": 1,
+    "match_score": 60,
     "matched_skills": [
         "Python",
         "SQL",
-        "Git",
-        "Pandas"
+        "Git"
     ],
     "missing_skills": [
+        "Pandas",
         "Machine Learning"
     ],
-    "recommendation": "Highly Recommended"
+    "recommendation": "Recommended"
 }
