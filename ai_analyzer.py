@@ -2,16 +2,18 @@ from groq import Groq
 import os
 from dotenv import load_dotenv
 
-load_dotenv()
-
-client = Groq(
-    api_key=os.getenv("GROQ_API_KEY")
-)
 
 def ai_resume_analysis(
     resume_text,
     required_skills
 ):
+    load_dotenv(override=True)
+    api_key = os.getenv("GROQ_API_KEY")
+    if not api_key:
+        raise ValueError("GROQ_API_KEY environment variable is not set. Please add it to your .env file.")
+    
+    client = Groq(api_key=api_key)
+
 
     prompt = f"""
 SYSTEM ROLE
